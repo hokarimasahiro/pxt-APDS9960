@@ -32,7 +32,7 @@ namespace apds9960 {
      * @param reg 
      * @param dat
      */
-    //% blockId="set reg" block="set"
+    //% blockId="set reg" block="set reg %reg %dat"
     export function setReg(reg: number, dat: number): void {
         let buf = pins.createBuffer(2);
         buf[0] = reg;
@@ -44,7 +44,7 @@ namespace apds9960 {
      * get reg
      * @param reg
      */
-    //% blockId="get reg" block="get"
+    //% blockId="get reg" block="get reg %reg"
     export function getReg(reg: number): number {
         pins.i2cWriteNumber(I2C_ADDR, reg, NumberFormat.UInt8BE);
         return pins.i2cReadNumber(I2C_ADDR, NumberFormat.UInt8BE);
@@ -52,28 +52,56 @@ namespace apds9960 {
 
     /**
      * init
+     * @param mode
      */
-    //% blockId="init" block="init"
+    //% blockId="init" block="init %mode"
     //% weight=90 blockGap=8
-    export function init(): boolean {
+    export function init(mode:number): boolean {
         let id = getReg(REG_ID)
         if (id != APDS9960_ID) return false;
-        setReg(0x80, 0b01000101); //POWER ON<0>, GESTURE ENABLE<6>, PROXIMITY DETECT ENALBE<2>,AEN=0
-        setReg(0x90, 0b00110000); //Gesture LED Drive Strength 300%(max)
-        setReg(0xA3, 0b01100100); //Reserve0, Gain x8(11), LED Drive 100mA(00), Wait Time see under number
-        //111=39.2mS 110=30.8mS 101=22.4mS 100=14.0mS 011=8.4mS 010=5.6mS 001=2.8ms 000=0mS
-        setReg(0xA4, 70);        //U MINUS OFFSET
-        setReg(0xA5, 0);         //D MINUS OFFSET
-        setReg(0xA7, 10);        //L MINUS OFFSET
-        setReg(0xA9, 34);        //R MINUS OFFSET
-        setReg(0xAB, 0b00000001); //GIEN off<1>(INTERRUPT DISABLE), GMODE ON<0>
+        switch(mode){
+            case 0: // GESTURE
+                setReg(0x80, 0b01000101); //POWER ON<0>, GESTURE<6> ENABLE, PROXIMITY<2> ENALBE,ALS<1> DISABLE
+                setReg(0x90, 0b00110000); //Gesture LED Drive Strength 300%(max)
+                setReg(0xA3, 0b01100100); //Reserve0, Gain x8(11), LED Drive 100mA(00), Wait Time see under number
+                //111=39.2mS 110=30.8mS 101=22.4mS 100=14.0mS 011=8.4mS 010=5.6mS 001=2.8ms 000=0mS
+                setReg(0xA4, 70);        //U MINUS OFFSET
+                setReg(0xA5, 0);         //D MINUS OFFSET
+                setReg(0xA7, 10);        //L MINUS OFFSET
+                setReg(0xA9, 34);        //R MINUS OFFSET
+                setReg(0xAB, 0b00000001); //GIEN off<1>(INTERRUPT DISABLE), GMODE ON<0>
+                break;
+            case 1: // PROXIMITY
+                setReg(0x80, 0b00000101); //POWER ON<0>, GESTURE<6> DISABLE, PROXIMITY<2> ENABLE,ALS<1> DISABLE
+                setReg(0x90, 0b00110000); //Gesture LED Drive Strength 300%(max)
+                setReg(0xA3, 0b01100100); //Reserve0, Gain x8(11), LED Drive 100mA(00), Wait Time see under number
+                //111=39.2mS 110=30.8mS 101=22.4mS 100=14.0mS 011=8.4mS 010=5.6mS 001=2.8ms 000=0mS
+                setReg(0xA4, 70);        //U MINUS OFFSET
+                setReg(0xA5, 0);         //D MINUS OFFSET
+                setReg(0xA7, 10);        //L MINUS OFFSET
+                setReg(0xA9, 34);        //R MINUS OFFSET
+                setReg(0xAB, 0b00000000); //GIEN off<1>(INTERRUPT DISABLE), GMODE OFF<0>
+                break;
+            case 2: // ALS(COLOR)
+                setReg(0x80, 0b00000111); //POWER ON<0>, GESTURE ENABLE<6>, PROXIMITY<2> ENALBE,ALS<1> ENABLE
+                setReg(0x90, 0b00110000); //Gesture LED Drive Strength 300%(max)
+                setReg(0xA3, 0b01100100); //Reserve0, Gain x8(11), LED Drive 100mA(00), Wait Time see under number
+                //111=39.2mS 110=30.8mS 101=22.4mS 100=14.0mS 011=8.4mS 010=5.6mS 001=2.8ms 000=0mS
+                setReg(0xA4, 70);        //U MINUS OFFSET
+                setReg(0xA5, 0);         //D MINUS OFFSET
+                setReg(0xA7, 10);        //L MINUS OFFSET
+                setReg(0xA9, 34);        //R MINUS OFFSET
+                setReg(0xAB, 0b00000000); //GIEN off<1>(INTERRUPT DISABLE), GMODE OFF<0>
+                break;
+            default:
+                return false;
+        }
         return true
     }
     /**
      * Clear VDET
      */
     //% blockId="clearVdet" block="clear VDET"
-    //% weight=44 blockGap=8
     export function clearVdet(): void {
     }
 }
