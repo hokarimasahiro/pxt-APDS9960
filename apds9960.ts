@@ -29,8 +29,11 @@ namespace apds9960 {
 
     /**
      * set reg
+     * @param reg 
+     * @param dat
      */
-    function setReg(reg: number, dat: number): void {
+    //% blockId="set reg" block="set"
+    export function setReg(reg: number, dat: number): void {
         let buf = pins.createBuffer(2);
         buf[0] = reg;
         buf[1] = dat;
@@ -39,8 +42,10 @@ namespace apds9960 {
 
     /**
      * get reg
+     * @param reg
      */
-    function getReg(reg: number): number {
+    //% blockId="get reg" block="get"
+    export function getReg(reg: number): number {
         pins.i2cWriteNumber(I2C_ADDR, reg, NumberFormat.UInt8BE);
         return pins.i2cReadNumber(I2C_ADDR, NumberFormat.UInt8BE);
     }
