@@ -46,7 +46,7 @@ namespace apds9960 {
     }
 
     /**
-     * get RTC DATA
+     * init
      */
     //% blockId="init" block="init"
     //% weight=90 blockGap=8
