@@ -4,15 +4,22 @@
     "description": "",
     "dependencies": {
         "core": "*",
-        "radio": "*"
+        "microphone": "*"
     },
     "files": [
         "README.md",
-        "main.ts"
+        "apds9960.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "public": false,
+    "targetVersions": {
+        "target": "4.0.18",
+        "targetId": "microbit"
+    },
+    "supportedTargets": [
+        "microbit"
+    ],
     "preferredEditor": "tsprj"
 }
