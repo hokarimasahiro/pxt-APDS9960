@@ -70,46 +70,6 @@ namespace apds9960 {
         return true
     }
     /**
-     * set Date and Time
-     * @param year data of year, eg: 2019
-     * @param month data of month, eg: 3
-     * @param day data of day, eg: 14
-     * @param weekday data of weekday, eg: 4
-     * @param hour data of hour, eg: 5
-     * @param minute data of minute, eg: 30
-     * @param second data of second, eg: 0
-     */
-    //% blockId="setSecond" block="set second %dat"
-    //% weight=70 blockGap=8
-    //% blockId="setDateTime" block="set year %year|month %month|day %day|weekday %weekday|hour %hour|minute %minute|second %second"
-    export function DateTime(year: number, month: number, day: number, weekday: number, hour: number, minute: number, second: number): void {
-        let buf = pins.createBuffer(8);
-        pins.i2cWriteBuffer(I2C_ADDR, buf)
-    }
-    /**
-     * get RTC DATA
-     */
-    //% blockId="getData" block="get RTC data"
-    //% weight=68 blockGap=8
-    export function getData(): number[] {
-        let retbuf = [0, 0, 0, 0, 0, 0, 0]
-        let buf = getRawData();
-        return retbuf;
-    }
-    /**
-     * get RTC RAW DATA
-     */
-    //% blockId="getRawData" block="get RTC RAW data"
-    //% weight=46 blockGap=8
-    export function getRawData(): number[] {
-        let retbuf = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        let buf = pins.i2cReadBuffer(I2C_ADDR, 16);
-        for (let i = 0; i < 16; i++) {
-            retbuf[i] = buf[i]
-        }
-        return retbuf;
-    }
-    /**
      * Clear VDET
      */
     //% blockId="clearVdet" block="clear VDET"
