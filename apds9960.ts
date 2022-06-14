@@ -29,8 +29,8 @@ namespace apds9960 {
 
     /**
      * set reg
-     * @param reg 
-     * @param dat
+     * @param reg number,eg:0x80
+     * @param dat number,eg:0x03
      */
     //% blockId="set reg" block="set reg %reg %dat"
     export function setReg(reg: number, dat: number): void {
@@ -42,7 +42,7 @@ namespace apds9960 {
 
     /**
      * get reg
-     * @param reg
+     * @param reg number,eg:0x80
      */
     //% blockId="get reg" block="get reg %reg"
     export function getReg(reg: number): number {
@@ -83,15 +83,7 @@ namespace apds9960 {
                 setReg(0xAB, 0b00000000); //GIEN off<1>(INTERRUPT DISABLE), GMODE OFF<0>
                 break;
             case 2: // ALS(COLOR)
-                setReg(0x80, 0b00000111); //POWER ON<0>, GESTURE ENABLE<6>, PROXIMITY<2> ENALBE,ALS<1> ENABLE
-                setReg(0x90, 0b00110000); //Gesture LED Drive Strength 300%(max)
-                setReg(0xA3, 0b01100100); //Reserve0, Gain x8(11), LED Drive 100mA(00), Wait Time see under number
-                //111=39.2mS 110=30.8mS 101=22.4mS 100=14.0mS 011=8.4mS 010=5.6mS 001=2.8ms 000=0mS
-                setReg(0xA4, 70);        //U MINUS OFFSET
-                setReg(0xA5, 0);         //D MINUS OFFSET
-                setReg(0xA7, 10);        //L MINUS OFFSET
-                setReg(0xA9, 34);        //R MINUS OFFSET
-                setReg(0xAB, 0b00000000); //GIEN off<1>(INTERRUPT DISABLE), GMODE OFF<0>
+                setReg(0x80, 0b00000011); //POWER ON<0>, ALS<1>,WEN<3> DISABLE
                 break;
             default:
                 return false;
