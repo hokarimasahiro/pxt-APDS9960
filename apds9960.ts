@@ -10,23 +10,8 @@ namespace apds9960 {
     let I2C_ADDR = 0x39
     let APDS9960_ID = 0xab
     let REG_ID = 0x92
-    let REG_UP = 0xfc
-    let REG_DOWN = 0xfd
-    let REG_LEFT = 0xfe
-    let REG_RIGHT = 0xff
 
-    let DATA_U, DATA_D, DATA_L, DATA_R;
-    let OLD_U, OLD_D, OLD_L, OLD_R;
-    let work;
-    let U_PEAK_END_FLAG, D_PEAK_END_FLAG, L_PEAK_END_FLAG, R_PEAK_END_FLAG;
-    let STATUS_UD, STATUS_LR;
-    let OLD_STATUS_UD, OLD_STATUS_LR;
-    let DISP_FLAG;
-    let NOISE_LEVEL = 2;
-    let DECIDE_FLAG;
-    let PHASE_COUNTER;
-    let U_PEAK, D_PEAK, L_PEAK, R_PEAK;
-
+    let cMax=4600,rMax=1250,gMax=1700,bMax=2050;
     /**
      * set reg
      */
@@ -36,13 +21,19 @@ namespace apds9960 {
         buf[1] = dat;
         pins.i2cWriteBuffer(I2C_ADDR, buf);
     }
-
     /**
      * get reg
      */
     function getReg(reg: number): number {
         pins.i2cWriteNumber(I2C_ADDR, reg, NumberFormat.UInt8BE);
         return pins.i2cReadNumber(I2C_ADDR, NumberFormat.UInt8BE);
+    }
+    /**
+     * get reg
+     */
+    function getRegW(reg: number): number {
+        pins.i2cWriteNumber(I2C_ADDR, reg, NumberFormat.UInt8BE);
+        return pins.i2cReadNumber(I2C_ADDR, NumberFormat.UInt16LE);
     }
 
     /**
@@ -79,10 +70,37 @@ namespace apds9960 {
                 break;
             case 2: // ALS(COLOR)
                 setReg(0x80, 0b00000011); //POWER ON<0>, ALS<1>,WEN<3> DISABLE
+                setReg(0x81,0x80);
                 break;
             default:
                 return false;
         }
         return true
+    }
+    /**
+     * getAls
+     */
+    //% blockId="getAls" block="getAls"
+    export function getAls(): number[] {
+        let retAls =[0,0,0,0];
+        retAls[0] = Math.constrain(getRegW(0x94) * 255 / cMax, 0, 255) << 0;
+        retAls[1] = Math.constrain(getRegW(0x96) * 255 / rMax, 0, 255) << 0;
+        retAls[2] = Math.constrain(getRegW(0x98) * 255 / gMax, 0, 255) << 0;
+        retAls[3] = Math.constrain(getRegW(0x9a) * 255 / bMax, 0, 255) << 0;
+        return retAls;
+    }
+    /**
+     * set max value
+     * @param c number,eg:4600
+     * @param r number,eg:1250
+     * @param g number,eg:1700
+     * @param b number,eg:2050
+     */
+    //% blockId="set max value" block="set max value %c %r %g %b"
+    export function setMaxValue(c:number,r:number,g:number,b:number): void {
+        cMax = c;
+        rMax = r;
+        gMax = g;
+        bMax = b;
     }
 }
