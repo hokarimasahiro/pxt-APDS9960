@@ -52,7 +52,7 @@ namespace apds9960 {
 
     /**
      * init
-     * @param mode
+     * @param mode number,eg:0
      */
     //% blockId="init" block="init %mode"
     //% weight=90 blockGap=8
