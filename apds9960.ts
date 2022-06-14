@@ -29,11 +29,8 @@ namespace apds9960 {
 
     /**
      * set reg
-     * @param reg number,eg:0x80
-     * @param dat number,eg:0x03
      */
-    //% blockId="set reg" block="set reg %reg %dat"
-    export function setReg(reg: number, dat: number): void {
+    function setReg(reg: number, dat: number): void {
         let buf = pins.createBuffer(2);
         buf[0] = reg;
         buf[1] = dat;
@@ -42,21 +39,19 @@ namespace apds9960 {
 
     /**
      * get reg
-     * @param reg number,eg:0x80
      */
-    //% blockId="get reg" block="get reg %reg"
-    export function getReg(reg: number): number {
+    function getReg(reg: number): number {
         pins.i2cWriteNumber(I2C_ADDR, reg, NumberFormat.UInt8BE);
         return pins.i2cReadNumber(I2C_ADDR, NumberFormat.UInt8BE);
     }
 
     /**
-     * init
+     * start
      * @param mode number,eg:0
      */
-    //% blockId="init" block="init %mode"
+    //% blockId="start" block="start %mode"
     //% weight=90 blockGap=8
-    export function init(mode:number): boolean {
+    export function start(mode:number): boolean {
         let id = getReg(REG_ID)
         if (id != APDS9960_ID) return false;
         switch(mode){
@@ -89,11 +84,5 @@ namespace apds9960 {
                 return false;
         }
         return true
-    }
-    /**
-     * Clear VDET
-     */
-    //% blockId="clearVdet" block="clear VDET"
-    export function clearVdet(): void {
     }
 }
